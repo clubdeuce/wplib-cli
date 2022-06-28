@@ -10,12 +10,14 @@
     ],
     "autoload": {
         "psr-4": {
-            "wplibcli\\": "src"
+            "WPLib_CLI\\": "src"
         }
     },
     "require": {
-        "php": ">=7.4",
         "consolidation/robo": "^2",
         "twig/twig": "^3.0"
+    },
+    "scripts": {
+        "phar:build": "box compile"
     }
 }

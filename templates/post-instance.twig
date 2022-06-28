@@ -1,0 +1,18 @@
+<?php
+namespace {{ namespace }}\PostTypes;
+
+/**
+ * @class {{ singular }}
+ * @package \{{ namespace }}\PostTypes
+ *
+ * @property {{ singular }}_Model $model
+ * @property {{ singular }}_View  $view
+ *
+ * @mixin {{ singular }}_Model
+ * @mixin {{ singular }}_View
+ */
+class {{ singular }} extends \WPLib_Post_Base {
+
+	const POST_TYPE = {{ plural }}::POST_TYPE;
+
+}

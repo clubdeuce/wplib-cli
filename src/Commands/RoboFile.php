@@ -1,8 +1,5 @@
 <?php
-
-namespace wplibcli\Commands;
-
-require_once '../..//vendor/autoload.php';
+namespace WPLib_CLI\Commands;
 
 /**
  * This is project's console commands configuration for Robo task runner.

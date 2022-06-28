@@ -1,0 +1,39 @@
+<?php
+namespace {{ namespace }}\PostTypes;
+
+/**
+ * @class {{  plural }}
+ * @package \{{ namespace }}\PostTypes
+ */
+class {{ plural }} extends \WPLib_Post_Module_Base {
+
+    const POST_TYPE      = '{{ short_prefix }}_{{ slug }}';
+    const INSTANCE_CLASS = '\{{ namespace }}\PostTypes\{{ singular }}';
+
+    /**
+     *
+     */
+    static function on_load() {
+
+        self::register_post_type( array(
+            'labels' => self::register_post_type_labels( array(
+                'name'          => __( '{{  singular }}', '{{ text_domain }}' ),
+                'singular_name' => __( '{{ plural }}', '{{ text_domain }}' ),
+            ) ),
+            'supports' => array(
+                'title',
+                'editor',
+                'thumbnail',
+            ),
+            'public'       => true,
+            'has_archive'  => false,
+            'show_in_rest' => true,
+        ) );
+
+        self::register_helper( __CLASS__, '\{{ namespace }}\App' );
+
+    }
+
+}
+
+{{ plural }}::on_load();
