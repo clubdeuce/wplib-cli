@@ -1,0 +1,23 @@
+<?php
+namespace {{ appName }};
+
+/**
+ * @class App
+ * @package \{{ appName }}
+ */
+class App extends \WPLib_App_Base {
+
+	const SHORT_PREFIX = '{{ shortPrefix }}_';
+
+	/**
+	 *
+	 */
+	static function on_load() {
+
+		define ( 'WPLIB_TEMPLATES_SUBDIR', 'template-parts' );
+
+	}
+
+}
+
+App::on_load();

@@ -1,6 +1,8 @@
 <?php
 namespace WPLib_CLI\Commands;
 
+use Twig\Environment;
+
 /**
  * This is project's console commands configuration for Robo task runner.
  *
@@ -18,17 +20,17 @@ class RoboFile extends \Robo\Tasks
      *
      * @var string
      */
-    protected $_plugin_dir = '';
+    protected $_appName = '';
 
     /**
      * @var string
      */
-    protected $_short_prefix = '';
+    protected $_shortPrefix = '';
 
     /**
      * @var string
      */
-    protected $_text_domain = '';
+    protected $_textDomain = '';
 
     /**
      *
@@ -62,7 +64,7 @@ class RoboFile extends \Robo\Tasks
 
         foreach ($params as $key => $value ) {
             if ( empty( $value['value'] ) ) {
-                $params[$key] = $this->ask( $value['label'] );
+                $params[$key]['value'] = $this->ask( $value['label'] );
             }
         }
 
@@ -73,8 +75,7 @@ class RoboFile extends \Robo\Tasks
         $slug = $params['slug'];
         $module_path = $this->module_directory() . '/post-type-' . $slug;
 
-        $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . '/templates' );
-        $twig   = new \Twig\Environment($loader);
+        $twig   = $this->_twig();
         $params = array_merge($params, $this->_global_params());
 
         try {
@@ -102,8 +103,67 @@ class RoboFile extends \Robo\Tasks
 
             $collection->run();
         } catch (Exception $e) {
-            $this->say( 'Error creating post type definition' );
+            $this->say( 'Error creating post type definition and instance classes.' );
         }
+    }
+
+    /**
+     * @param string $appName
+     * @param string $shortPrefix
+     * @param string $textDomain
+     */
+    public function init(string $appName = '', string $shortPrefix = '', string $textDomain = '') {
+        $params = [
+            'appName'       => ['value' => $appName,     'label' => 'Enter value for app name (e.g. MyProject, My_Project, but not \'My Project\'):'],
+            'shortPrefix'   => ['value' => $shortPrefix, 'label' => 'Enter value for short prefix (e.g. mp):'],
+            'textDomain'    => ['value' => $textDomain,  'label' => 'Enter the text domain for gettext functions:'],
+        ];
+
+        foreach ($params as $key => $value ) {
+            if ( empty( $value['value'] ) ) {
+                $params[$key]['value'] = $this->ask( $value['label'] );
+            }
+        }
+
+        foreach( $params as $key => $value ) {
+            $params[$key] = $value['value'];
+        }
+
+        $collection = $this->collectionBuilder();
+
+        $appName = $params['appName'];
+
+        $muPluginDir = getcwd() . '/wp-content/mu-plugins/';
+        $appFileDir  = $muPluginDir. strtolower($appName);
+        $appFile     = strtolower($appFileDir . "/{$appName}.php");
+
+        $collection->addTask($this->taskFilesystemStack()
+            ->touch(getcwd() . '/wplib.json')
+            ->mkdir($appFileDir)
+            ->touch($appFile)
+        );
+
+        $collection->addTask($this->taskWriteToFile(getcwd() . '/wplib.json')->text(json_encode($params)));
+
+        $collection->addTask(
+            $this->taskWriteToFile( $appFile  )
+                ->text($this->_twig()->render('app.twig', $params))
+        );
+
+        $collection->addTask(
+            $this->taskFilesystemStack()
+                ->touch($muPluginDir . '/plugin-loader.php')
+        );
+
+        $params['appNameUppercase'] = strtoupper($appName);
+        $params['appNameLowercase'] = strtolower($appName);
+
+        $collection->addTask(
+            $this->taskWriteToFile($muPluginDir . '/plugin-loader.php')
+                ->text($this->_twig()->render('plugin-loader.twig', $params))
+        );
+
+        $collection->run();
     }
 
     /**
@@ -145,5 +205,15 @@ class RoboFile extends \Robo\Tasks
             'text_domain'  => $this->_text_domain,
         ];
     }
+
+    /**
+     * @return Environment
+     */
+    protected function _twig() : Environment
+    {
+        $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . '/templates' );
+        return new \Twig\Environment($loader);
+    }
+
 
 }
