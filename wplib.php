@@ -40,16 +40,3 @@ $statusCode     = (new \Robo\Runner($commandClasses))
         new \Symfony\Component\Console\Output\ConsoleOutput()
     );
 exit($statusCode);
-
-//
-//$runner = new \Robo\Runner($commandClasses);
-//$runner
-//    ->setSelfUpdateRepository($selfUpdateRepository)
-//    ->setConfigurationFilename($configurationFile)
-//    ->setClassLoader($classLoader);
-//
-//// Execute the command and return the result.
-//$output = new \Symfony\Component\Console\Output\ConsoleOutput();
-//$statusCode = $runner->execute($argv, $appName, $appVersion, $output);
-//
-//exit($statusCode);

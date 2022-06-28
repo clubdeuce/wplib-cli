@@ -33,6 +33,11 @@ class RoboFile extends \Robo\Tasks
     protected $_textDomain = '';
 
     /**
+     * @var array
+     */
+    protected $_extra_args = [];
+
+    /**
      *
      */
     public function __construct()
