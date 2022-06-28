@@ -1,0 +1,21 @@
+{
+    "name": "clubdeuce/wplib-cli",
+    "description": "A CLI for automating tasks for WPLib",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Daryl Lozupone",
+            "email": "daryl@clubdeuce.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "wplibcli\\": "src"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "consolidation/robo": "^2",
+        "twig/twig": "^3.0"
+    }
+}
