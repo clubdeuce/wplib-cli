@@ -2,6 +2,9 @@
 /**
  * @link https://robo.li/framework/#creating-a-standalone-phar-with-robo
  */
+
+const WORKING_DIR = __DIR__;
+
 $pharPath = Phar::running('returnPhar');
 
 $appName              = "WPLib CLI";
